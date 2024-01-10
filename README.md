@@ -1,7 +1,10 @@
 # My Nuxt 3 Simple To Do App
 Simple To Do Web App powered by Nuxt 3
 
-# Nuxt 3 Minimal Starter
+# Notes
+Node v21.0.0 makes the sass preprocessor getting an error so make sure that you install the LTS or latest version of node on your local machine
+
+# My Nuxt 3 Simple To Do App Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
