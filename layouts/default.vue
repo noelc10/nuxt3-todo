@@ -1,9 +1,10 @@
 <template>
   <v-app>
+    <NuxtLoadingIndicator color="primary" />
     <v-app-bar elevation="0" color="white" class="px-4 text-center">
       <v-app-bar-title class="mx-0">
         <div class="d-flex flex column justify-center">
-          <NuxtLink :to="'/'" class="d-flex align-center text-black text-decoration-none">
+          <NuxtLink :to="{ name: 'index' }" class="d-flex align-center text-black text-decoration-none">
             <span>
               <img
                 src="/assets/img/todo.png"
@@ -19,7 +20,7 @@
       </v-app-bar-title>
     </v-app-bar>
 
-    <v-main class="bg-grey-lighten-4" style="min-height: 300px;">
+    <v-main class="bg-grey-lighten-4" style="min-height: 93vh;">
       <NuxtPage />
     </v-main>
     

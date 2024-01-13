@@ -13,16 +13,41 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    //...
+    '@pinia/nuxt',
   ],
+  runtimeConfig: {
+    apiSecret: '', // can be overridden by NUXT_API_SECRET environment variable
+    public: {
+      baseURL: 'http://localhost:3000',
+      apiBase: 'https://jsonplaceholder.typicode.com', // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+    }
+  },
+  imports: {
+    dirs: [
+      // Scan top-level modules
+      'composables',
+      // ... or scan modules nested one level deep with a specific name and file extension
+      'composables/*/index.{ts,js,mjs,mts}',
+      // ... or scan all modules within given directory
+      'composables/**'
+    ]
+  },
+  alias: {
+    "~": "/<rootDir>",
+    "@": "/<rootDir>",
+    "~~": "/<rootDir>",
+    "@@": "/<rootDir>",
+    "assets": "/<rootDir>/assets",
+    "public": "/<rootDir>/public"
+  },
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   vite: {
     vue: {
       template: {
         transformAssetUrls,
       },
     },
-  },
-  runtimeConfig: {
-    apiUrl: process.env.API_URL
   }
 })

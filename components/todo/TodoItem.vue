@@ -6,6 +6,6 @@
   </v-card>
 </template>
 
-<script>
+<script setup>
 const { todo } = defineProps(['todo'])
 </script>

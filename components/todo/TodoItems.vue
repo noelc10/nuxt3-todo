@@ -5,15 +5,14 @@
     class="my-2"
   >
     <v-list
-      lines="two"
+      lines="one"
       class="py-0"
     >
       <v-list-item
-        :to="`/todo/${todo.id}`"
+        :to="`/${todo.id}`"
         class="py-0"
       >
         <v-list-item-title>{{ todo.title }}</v-list-item-title>
-        <v-list-item-subtitle>{{ todo.description || '' }}</v-list-item-subtitle>
       </v-list-item>
     </v-list>
   </v-card>
