@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <NuxtLoadingIndicator color="primary" />
     <v-app-bar elevation="0" color="white" class="px-4 text-center">
       <v-app-bar-title class="mx-0">
         <div class="d-flex flex column justify-center">
@@ -23,6 +22,9 @@
     <v-main class="bg-grey-lighten-4" style="min-height: 93vh;">
       <NuxtPage />
     </v-main>
+
+    <confirm-dialog />
+    <v-toast />
     
     <v-footer color="primary">
       <div class="px-4 py-2 text-center w-100">
@@ -31,6 +33,7 @@
     </v-footer>
   </v-app>
 </template>
+
 
 <style lang="scss" scoped>
 .content {

@@ -1,53 +1,69 @@
 <template>
-  <v-container v-if="route.name !== 'index-id'">
-    <v-row>
-      <v-col cols="2" />
-      <v-col>
+  <div>
+    <ClientOnly>
+      <v-container v-if="route.name !== 'index-id'">
         <v-row>
-          <v-col class="text-right">
-            <v-btn
-              color="primary"
-              :to="'/add'"
-              :loading="loading"
-              :disabled="loading"
-            >
-              <v-icon left>
-                $plus
-              </v-icon>
-              Add To Do
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row>
+          <v-col cols="2" />
           <v-col>
-            <todo-items v-if="todos.length" :todos="todos" />
+            <v-row>
+              <v-col class="text-center text-sm-right">
+                <v-btn
+                  color="primary"
+                  :to="'/add'"
+                  :loading="loading"
+                  :disabled="loading"
+                >
+                  <v-icon left>
+                    $plus
+                  </v-icon>
+                  Add To Do
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <todo-items v-if="todos.length" :todos="todos" />
 
-            <v-skeleton-loader
-              v-if="loading"
-              type="list-item"
-            ></v-skeleton-loader>
-            
-            <div v-if="!todos.length && !loading" class="text-center">
-              Empty task list.
-            </div>
+                <v-row v-if="loading">
+                  <v-col v-for="(n,i) in 4" :key="i" cols="3">
+                    <v-skeleton-loader
+                      type="list-item"
+                    ></v-skeleton-loader>
+                  </v-col>
+                </v-row>
+                
+                <div v-if="!todos.length && !loading" class="text-center">
+                  Empty task list.
+                </div>
+              </v-col>
+            </v-row>
           </v-col>
+          <v-col cols="2" />
         </v-row>
-      </v-col>
-      <v-col cols="2" />
-    </v-row>
-  </v-container>
+      </v-container>
 
-  <NuxtPage />
+      <NuxtPage />
+    </ClientOnly>
+  </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
+import { useVToastStore } from '@/stores/vToastStore'
+import { useConfirmDialogStore } from '@/stores/confirmDialogStore'
 
 useHead({
   title: 'To Do | List'
 })
 
+definePageMeta({
+  layout: 'default'
+});
+
+const nuxtApp = useNuxtApp()
 const route = useRoute()
+const vToastStore = useVToastStore()
+const confirmDialogStore = useConfirmDialogStore()
 
 let todos = ref([])
 let loading = ref(false)
@@ -66,24 +82,30 @@ watch(
 )
 
 async function init () {
-  console.log('index fetching list...')
   clear()
   loading.value = true
 
-  await nextTick()
-  const response = await useAPIFetch('/todos')
-  todos.value = await response.data?.value ?? clear()
+  const { data, error } = await useAPIFetch('/todos')
+
+  if (error.value) {
+    console.error('Something went wrong while fetching to do lists!')
+  }
+
+  todos.value = await data?.value ?? clear()
   
   loading.value = false
 }
 
 function clear () {
-  console.log('index should clear the list...')
-  todos.value = ref([])
+  todos.value = []
 }
 
-onMounted(() => {
-  console.log('index should trigger on mounted...')
+onMounted(async () => {
+  // vToastStore.show({ message: 'AYE!' })
+  // confirmDialogStore
+  //   .show('Are you sure you want to delete this category?', {
+  //     title: 'Deleting Selected Business Category'
+  //   })
   init()
 })
 </script>
