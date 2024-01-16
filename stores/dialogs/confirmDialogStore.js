@@ -3,6 +3,7 @@ import { ref } from 'vue'
 
 export const useConfirmDialogStore = defineStore('confirmDialogStore', () => {
   const open = ref(false)
+  const promiseResolved = ref(null)
   const options = ref({
     title: '',
     message: '',
@@ -15,26 +16,33 @@ export const useConfirmDialogStore = defineStore('confirmDialogStore', () => {
     width: '500'
   })
 
-  function show (message, opts = {}) {
+  function show(message, opts = {}) {
+    promiseResolved.value = null
     options.value = {
       ...options.value,
       ...opts,
       message
     }
     open.value = true
+
+    return new Promise((resolve) => {
+      promiseResolved.value = resolve
+    })
   }
 
-  function cancel () {
+  function cancel() {
+    promiseResolved.value(false)
     open.value = false
-    $reset()
+    reset()
   }
 
-  function confirm () {
+  function confirm() {
+    promiseResolved.value(true)
     open.value = false
-    $reset()
+    reset()
   }
 
-  function $reset () {
+  function reset() {
     options.value = {
       color: 'error',
       cancelText: 'Cancel',
@@ -49,6 +57,6 @@ export const useConfirmDialogStore = defineStore('confirmDialogStore', () => {
     show,
     cancel,
     confirm,
-    $reset
+    reset
   }
 })

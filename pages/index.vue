@@ -1,7 +1,7 @@
 <template>
   <div>
     <ClientOnly>
-      <v-container v-if="route.name !== 'index-id'">
+      <v-container v-if="hideContainer">
         <v-row>
           <v-col cols="2" />
           <v-col>
@@ -22,7 +22,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <todo-items v-if="todos.length" :todos="todos" />
+                <todo-items v-if="todos?.length" :todos="todos" />
 
                 <v-row v-if="loading">
                   <v-col v-for="(n,i) in 4" :key="i" cols="3">
@@ -32,7 +32,7 @@
                   </v-col>
                 </v-row>
                 
-                <div v-if="!todos.length && !loading" class="text-center">
+                <div v-if="!todos?.length && !loading" class="text-center">
                   Empty task list.
                 </div>
               </v-col>
@@ -48,9 +48,11 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useVToastStore } from '@/stores/vToastStore'
-import { useConfirmDialogStore } from '@/stores/confirmDialogStore'
+import { onMounted, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useVToastStore } from '@/stores/toast/vToastStore'
+import { useConfirmDialogStore } from '@/stores/dialogs/confirmDialogStore'
+import { useTodoStore } from '@/stores/todo/todoStore'
 
 useHead({
   title: 'To Do | List'
@@ -65,47 +67,40 @@ const route = useRoute()
 const vToastStore = useVToastStore()
 const confirmDialogStore = useConfirmDialogStore()
 
-let todos = ref([])
+const todoStore = useTodoStore()
+const { todos } = storeToRefs(todoStore)
+
 let loading = ref(false)
+
+const hideContainer = computed(() => {
+  const pages = ['index-id']
+
+  return !pages.includes(route.name)
+})
 
 watch(
   () => route.name,
   (val) => {
-    if (val === 'index') {
-      init()
-    }
+    init()
   },
   {
-    deep: true,
     immediate: true
   }
 )
 
-async function init () {
-  clear()
+async function init() {
+  todoStore.clearTodos()
   loading.value = true
 
-  const { data, error } = await useAPIFetch('/todos')
-
-  if (error.value) {
-    console.error('Something went wrong while fetching to do lists!')
-  }
-
-  todos.value = await data?.value ?? clear()
+  await todoStore.getTodos()
+    .catch(() => {
+      vToastStore.show({ color: 'error', message: 'Something went wrong while fetching to do lists!' })
+    })
   
   loading.value = false
 }
 
-function clear () {
-  todos.value = []
-}
-
-onMounted(async () => {
-  // vToastStore.show({ message: 'AYE!' })
-  // confirmDialogStore
-  //   .show('Are you sure you want to delete this category?', {
-  //     title: 'Deleting Selected Business Category'
-  //   })
+onMounted(() => {
   init()
 })
 </script>

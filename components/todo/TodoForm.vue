@@ -5,13 +5,15 @@
     min-width="300px"
     width="auto"
   >
-    <v-form @submit.prevent>
-      <v-card>
+    <v-form @submit.prevent="handleSubmit">
+      <v-card
+        :loading="props.loading"
+      >
         <v-card-title>
           <v-container fluid fill-height class="px-0">
             <v-row align="center">
               <v-col>
-                Add To Do
+                {{ props.type === 'edit' ? 'Edit' : 'Add' }} To Do
               </v-col>
               <v-spacer />
               <v-col class="text-right">
@@ -20,6 +22,7 @@
                     <v-tooltip
                       activator="parent"
                       location="top"
+                      :disabled="props.loading"
                     >
                       Close
                     </v-tooltip>
@@ -32,14 +35,40 @@
           <v-text-field
             v-model="form.title"
             :rules="titleRules"
+            :disabled="props.loading"
+            :loading="props.loading"
             label="Title"
             variant="outlined"
           />
-          <v-checkbox v-model="form.completed" label="Completed" />
+          <v-checkbox
+            v-model="form.completed"
+            :label="form.completed ? 'Done' : 'Ongoing'"
+            :disabled="props.loading"
+            :loading="props.loading"
+          />
         </v-card-text>
-        <v-card-actions class="justify-sm-end justify-center">
-          <v-btn type="submit" variant="tonal" color="primary">Add</v-btn>
-          <v-btn variant="tonal" color="error" @click="handleDialog(false)">Cancel</v-btn>
+        <v-card-actions>
+          <v-spacer />
+
+          <v-btn
+            type="submit"
+            variant="tonal"
+            color="primary"
+            :disabled="props.loading"
+            :loading="props.loading"
+          >
+            {{ props.type === 'edit' ? 'Update' : 'Add' }}
+          </v-btn>
+          
+          <v-btn
+            variant="tonal"
+            color="error"
+            :disabled="props.loading"
+            :loading="props.loading"
+            @click="handleDialog(false)"
+          >
+            Cancel
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -50,12 +79,27 @@
 import { ref } from 'vue'
 
 const nuxtApp = useNuxtApp()
-const { show } = defineProps([
-  'show'
-])
-const emit = defineEmits(['handleDialog'])
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: false
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  type: {
+    type: String,
+    default: 'add'
+  },
+  todo: {
+    type: Object,
+    default: null
+  }
+})
+const emit = defineEmits(['dialog', 'submit'])
 const titleRules = reactive([
-  v => !!v || 'Name is required'
+  v => !!v || 'Title is required'
 ])
 
 let dialog = ref(false)
@@ -64,27 +108,36 @@ let form = ref({
   completed: false
 })
 
-async function handleDialog (data) {
-  dialog.value = data
-  emit('handleDialog', data)
-
-  if (!data) {
-    await navigateTo('/')
+function init() {
+  if (props.type === 'edit') {
+    form.value.title = props.todo?.title
+    form.value.completed = props.todo?.completed
   }
 }
 
+function handleDialog(data) {
+  dialog.value = data
+  
+  setTimeout(() => {
+    emit('dialog', data)
+  }, 1000)
+}
+
+async function handleSubmit() {
+  emit('submit', form)
+}
+
 watch(
-  () => show,
+  () => props.show,
   (val) => {
     dialog.value = val
   },
   {
-    deep: true,
     immediate: true
   }
 )
 
 onMounted(() => {
-  dialog.value = show
+  init()
 })
 </script>

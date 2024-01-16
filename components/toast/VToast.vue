@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { useVToastStore } from '@/stores/vToastStore'
+import { useVToastStore } from '@/stores/toast/vToastStore'
 
 const vToastStore = useVToastStore()
 </script>

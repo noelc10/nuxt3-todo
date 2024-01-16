@@ -8,11 +8,7 @@ export const useVToastStore = defineStore('vToastStore', () => {
   const icon = ref('mdi-check')
   const timer = ref(3000)
 
-  function show (data) {
-    setTimeout(() => {
-      $reset()
-    }, timer.value)
-
+  function show(data) {
     message.value = data.message || 'missing "message".'
     color.value = data.color || 'success'
     timer.value = data.timer || 5000
@@ -26,7 +22,7 @@ export const useVToastStore = defineStore('vToastStore', () => {
     showSnackbar.value = true
   }
 
-  function $reset() {
+  function reset() {
     showSnackbar.value = false
     message.value = ''
     color.value = 'success'
@@ -41,6 +37,6 @@ export const useVToastStore = defineStore('vToastStore', () => {
     icon,
     timer,
     show,
-    $reset
+    reset
   }
 })
