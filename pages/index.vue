@@ -60,7 +60,7 @@ useHead({
 
 definePageMeta({
   layout: 'default'
-});
+})
 
 const nuxtApp = useNuxtApp()
 const route = useRoute()
