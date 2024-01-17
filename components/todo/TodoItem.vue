@@ -113,5 +113,4 @@ async function deleteTodo() {
       })
   }
 }
-
 </script>

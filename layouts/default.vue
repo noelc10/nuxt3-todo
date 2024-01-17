@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar elevation="0" color="white" class="px-4 text-center">
+    <v-app-bar color="white" class="px-4 text-center">
       <v-app-bar-title class="mx-0">
         <div class="d-flex flex column justify-center">
           <NuxtLink :to="{ name: 'index' }" class="d-flex align-center text-black text-decoration-none">
@@ -20,7 +20,9 @@
     </v-app-bar>
 
     <v-main class="bg-grey-lighten-4" style="min-height: 93vh;">
-      <NuxtPage />
+      <div>
+        <NuxtPage />
+      </div>
     </v-main>
 
     <confirm-dialog />

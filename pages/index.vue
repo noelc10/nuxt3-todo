@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useVToastStore } from '@/stores/toast/vToastStore'
 import { useConfirmDialogStore } from '@/stores/dialogs/confirmDialogStore'
@@ -81,7 +81,11 @@ const hideContainer = computed(() => {
 watch(
   () => route.name,
   (val) => {
-    init()
+    const pages = ['index', 'index-add', 'index-id-edit']
+
+    if (pages.includes(val)) {
+      init()
+    }
   },
   {
     immediate: true
@@ -99,8 +103,4 @@ async function init() {
   
   loading.value = false
 }
-
-onMounted(() => {
-  init()
-})
 </script>

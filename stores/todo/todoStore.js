@@ -44,11 +44,11 @@ export const useTodoStore = defineStore('todoStore', () => {
   }
 
   function clearTodos() {
-    todos.value = []
+    return todos.value = []
   }
 
   function clearTodo() {
-    todo.value = null
+    return todo.value = null
   }
 
   return {

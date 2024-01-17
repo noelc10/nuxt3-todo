@@ -130,7 +130,12 @@ async function handleSubmit() {
 watch(
   () => props.show,
   (val) => {
+    console.log('TodoForm watch')
     dialog.value = val
+
+    if (props.show) {
+      init()
+    }
   },
   {
     immediate: true

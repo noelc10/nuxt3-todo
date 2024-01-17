@@ -1,9 +1,9 @@
 <template>
-  <todo-form :show="show" :loading="loading" :type="'edit'" :todo="todo" @dialog="handleDialog" @submit="handleSubmit" />
+  <todo-form v-if="show && todo" :show="show" :loading="loading" :type="'edit'" :todo="todo" @dialog="handleDialog" @submit="handleSubmit" />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTodoStore } from '@/stores/todo/todoStore'
 import { useVToastStore } from '@/stores/toast/vToastStore'
@@ -62,7 +62,15 @@ async function handleSubmit(data) {
   loading.value = false
 }
 
-onMounted(() => {
-  init()
-})
+watch(
+  () => route.name,
+  (val) => {
+    if (val === 'index-id-edit') {
+      init()
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>

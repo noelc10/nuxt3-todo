@@ -9,8 +9,6 @@
         <v-col cols="2" />
       </v-row>
     </v-container>
-    
-    <NuxtPage />
   </div>
 </template>
 
@@ -33,8 +31,9 @@ const { todo } = storeToRefs(todoStore)
 let loading = ref(false)
 
 async function init() {
+  todoStore.clearTodo()
   loading.value = true
-
+  
   await todoStore.getTodo(id)
     .catch(async () => {
       vToastStore.show({
@@ -58,8 +57,4 @@ watch(
     immediate: true
   }
 )
-
-onMounted(() => {
-  init()
-})
 </script>
