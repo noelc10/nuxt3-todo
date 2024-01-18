@@ -46,17 +46,9 @@ async function handleDialog(dialog) {
 async function handleSubmit(data) {
   loading.value = true
 
-  await todoStore.updateTodo(id, data)
+  await useSubmitTodoForm('update', data, id)
     .then(() => {
-      vToastStore.show({ message: 'Successfully updated selected to do!' })
-
       handleDialog(false)
-    })
-    .catch(() => {
-      vToastStore.show({
-        color: 'error',
-        message: 'Something went wrong while updating your todo data to API.'
-      })
     })
 
   loading.value = false

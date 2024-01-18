@@ -3,10 +3,11 @@
     v-model="vToastStore.showSnackbar"
     :color="vToastStore.color"
     :timeout="vToastStore.timer"
-    bottom
-    right
-    app
+    rounded
+    multi-line
+    close-on-back
     content-class="d-flex"
+    z-index="2500"
   >
     <v-icon left class="d-inline-flex" :icon="vToastStore.icon" />
     

@@ -109,7 +109,7 @@ let form = ref({
 })
 
 function init() {
-  if (props.type === 'edit') {
+  if (props.type === 'edit' && props.todo) {
     form.value.title = props.todo?.title
     form.value.completed = props.todo?.completed
   }
@@ -130,7 +130,6 @@ async function handleSubmit() {
 watch(
   () => props.show,
   (val) => {
-    console.log('TodoForm watch')
     dialog.value = val
 
     if (props.show) {
@@ -141,8 +140,4 @@ watch(
     immediate: true
   }
 )
-
-onMounted(() => {
-  init()
-})
 </script>

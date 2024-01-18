@@ -4,6 +4,11 @@
       "title": "sample to do",
       "completed": false,
       "id": "98fd"
+    },
+    {
+      "title": "sample todo aye aye aye",
+      "completed": true,
+      "id": "ce4c"
     }
   ]
 }
